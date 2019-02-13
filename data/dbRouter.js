@@ -27,7 +27,6 @@ const addition = { title, contents }
 if (!title || !contents ) {
     return res.status(400).json( { errorMessage: "Please provide title and contents for the post." } )
 }
-
 try {
     const posts = await db.insert(addition);
     res.status(201).json(posts);
@@ -66,13 +65,22 @@ res.status(500).json({
 }
 })
 
-// router.get('/:id', async (req, res) => {
-// try {
-
-// } catch (error) {
-
-// }
-// })
+router.get('/:id', async (req, res) => {
+const { id } = req.params
+try {
+const found = await db.findById(id)
+    if (found) {
+        res.status(200).json(found)
+    }
+    else {
+        res.status(404).json({ message: "The post with the specified ID does not exist." })
+    }
+} catch (error) {
+    res.status(500).json({
+        error: "The post information could not be retrieved." 
+    })
+}
+})
 
 // router.delete('/:id', async (req, res) => {
 // try {
